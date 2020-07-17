@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="common-fragments.html :: head"></head>
+
+<body>
+
+    <!-- LOADER -->
+    <div th:replace="common-fragments.html :: preloader"></div>
+    <!-- END LOADER -->
+
+    <!-- Home Popup Section -->
+    <!-- End Screen Load Popup Section -->
+
+    <!-- START HEADER -->
+    <header th:replace="common-fragments.html :: header"></header>
+    <!-- END HEADER -->
+
+    <!-- START SECTION BREADCRUMB -->
+    <div class="breadcrumb_section bg_gray page-title-mini">
+        <div class="container"><!-- STRART CONTAINER -->
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="page-title">
+                        <h1>회원가입</h1>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <ol class="breadcrumb justify-content-md-end">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                        <li class="breadcrumb-item active">Register</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- END CONTAINER-->
+    </div>
+    <!-- END SECTION BREADCRUMB -->
+
+    <!-- START MAIN CONTENT -->
+    <div class="main_content">
+
+    <!-- START LOGIN SECTION -->
+    <div class="login_register_wrap section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-6 col-md-10">
+                    <div class="login_wrap">
+                        <div class="padding_eight_all bg-white">
+                            <div class="heading_s1">
+                                <h3>계정 생성</h3>
+                            </div>
+                            <form method="post" th:action="@{/signup}" th:object="${signUpForm}" class="needs-validation">
+                                <div class="form-group">
+                                    <label for="name">이름</label>
+                                    <input id="name" type="text" class="form-control" th:field="*{name}" placeholder="이름을 입력하세요."
+                                           aria-describedby="nicknameHelp" required minlength="1" maxlength="20">
+                                    <small id="nameHelp" class="form-text text-muted">
+                                        공백없이 20자(숫자/문자) 이내로 입력하세요. 가입후에 변경할 수 있습니다.
+                                    </small>
+                                    <small class="invalid-feedback">닉네임을 입력하세요.</small>
+                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">적합하지 않은 이름입니다.</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">이메일</label>
+                                    <input id="email" type="email" th:field="*{email}" class="form-control"
+                                           placeholder="이메일을 입력하세요." aria-describedby="emailHelp" required>
+                                    <small id="emailHelp" class="form-text text-muted">
+                                        이메일은 가입후에 변경할 수 없습니다.
+                                    </small>
+                                    <small class="invalid-feedback">이메일을 입력하세요.</small>
+                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">적절하지 않은 이메일 주소입니다.</small>
+                                    <small class="form-text text-danger" th:if="${error}">중복된 이메일 입니다. 다른 이메일을 입력 해주세요.</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">패스워드</label>
+                                    <input id="password" type="password" th:field="*{password}" class="form-control"
+                                           aria-describedby="passwordHelp" required minlength="8" maxlength="50" placeholder="패스워드 입력하세요.">
+                                    <small id="passwordHelp" class="form-text text-muted">
+                                        8자 이상 50자 이내로 입력하세요. 영문자, 숫자, 특수기호를 사용할 수 있으며 공백은 사용할 수 없습니다.
+                                    </small>
+                                    <small class="invalid-feedback">패스워드를 입력하세요.</small>
+                                    <small class="form-text text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">적절하지 않은 패스워드 입니다.</small>
+                                </div>
+<!--                                <div class="login_footer form-group">-->
+<!--                                    <div class="chek-form">-->
+<!--                                        <div class="custome-checkbox">-->
+<!--                                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox2" value="">-->
+<!--                                            <label class="form-check-label" for="exampleCheckbox2"><span>I agree to terms &amp; Policy.</span></label>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-fill-out btn-block" name="register">가입하기</button>
+                                </div>
+                            </form>
+                            <div class="different_login">
+                                <span> or</span>
+                            </div>
+                            <ul class="btn-login list_none text-center">
+                                <li><a href="#" class="btn btn-facebook"><i class="ion-social-facebook"></i>Facebook</a></li>
+                                <li><a href="#" class="btn btn-google"><i class="ion-social-googleplus"></i>Google</a></li>
+                            </ul>
+                            <div class="form-note text-center">이미 계정이 있다구요? <a href="/login">로그인</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END LOGIN SECTION -->
+
+    <!-- START SECTION SUBSCRIBE NEWSLETTER -->
+    <!-- END SECTION SUBSCRIBE NEWSLETTER -->
+
+    </div>
+    <!-- END MAIN CONTENT -->
+
+    <!-- START FOOTER -->
+    <div th:replace="common-fragments.html :: footer"></div>
+    <!-- END FOOTER -->
+
+    <a href="#" class="scrollup" style="display: none;"><i class="ion-ios-arrow-up"></i></a>
+
+    <script th:replace="common-fragments.html :: form-validation"></script>
+</body>
+</html>

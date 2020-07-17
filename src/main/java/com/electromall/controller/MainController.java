@@ -11,16 +11,4 @@ public class MainController {
 
         return "index";
     }
-
-    @GetMapping("/login")
-    public String getLoginView() {
-
-        return "login";
-    }
-
-    @GetMapping("/signup")
-    public String getSignUpView() {
-
-        return "signup";
-    }
 }

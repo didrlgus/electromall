@@ -1,0 +1,33 @@
+spring:
+  profiles:
+    active: local
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+
+  thymeleaf:
+    cache: false
+
+---
+spring:
+  profiles: local
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3307/electromall_dev
+    username: root
+    password: root
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+
+

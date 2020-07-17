@@ -16,11 +16,15 @@
     <!-- END MAIN HEADER -->
 
     <!-- START SECTION BANNER -->
-    <div th:replace="main-fragments.html :: main-header-banner"></div>
+<!--    <div th:replace="main-fragments.html :: main-header-banner"></div>-->
     <!-- END SECTION BANNER -->
 
     <!-- START MAIN CONTENT -->
     <div class="main_content">
+
+        <!-- START_TOP_CATEGORIES -->
+        <div th:replace="main-fragments.html :: main-top-categories"></div>
+        <!-- END -->
 
         <!-- START SECTION SHOP -->
         <div th:replace="main-fragments.html :: main-content-product-classification"></div>
@@ -60,7 +64,7 @@
     <div th:replace="common-fragments.html :: footer"></div>
     <!-- END FOOTER -->
 
-<a href="#" class="scrollup" style="display: none;"><i class="ion-ios-arrow-up"></i></a>
+    <a href="#" class="scrollup" style="display: none;"><i class="ion-ios-arrow-up"></i></a>
 
 </body>
 </html>
