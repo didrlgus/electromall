@@ -88,9 +88,12 @@
                         </form>
                     </div>
                     <ul class="navbar-nav attr-nav align-items-center">
-                        <li><a href="#" class="nav-link"><i class="linearicons-user"></i></a></li>
-                        <li><a href="#" class="nav-link"><i class="linearicons-heart"></i><span class="wishlist_count">0</span></a></li>
-                        <li class="dropdown cart_dropdown"><a class="nav-link cart_trigger" href="#" data-toggle="dropdown"><i class="linearicons-bag2"></i><span class="cart_count">2</span><span class="amount"><span class="currency_symbol">$</span>159.00</span></a>
+                        <li sec:authorize="!isAuthenticated()"><a th:href="@{/login}" class="nav-link">로그인</a></li>
+                        <li sec:authorize="!isAuthenticated()">|</li>
+                        <li sec:authorize="!isAuthenticated()"><a th:href="@{/signup}" class="nav-link">회원가입</a></li>
+                        <li sec:authorize="isAuthenticated()"><a href="#" class="nav-link"><i class="linearicons-user"></i></a></li>
+                        <li sec:authorize="isAuthenticated()"><a href="#" class="nav-link"><i class="linearicons-heart"></i><span class="wishlist_count">0</span></a></li>
+                        <li sec:authorize="isAuthenticated()" class="dropdown cart_dropdown"><a class="nav-link cart_trigger" href="#" data-toggle="dropdown"><i class="linearicons-bag2"></i><span class="cart_count">2</span><span class="amount"><span class="currency_symbol">$</span>159.00</span></a>
                             <div class="cart_box cart_right dropdown-menu dropdown-menu-right">
                                 <ul class="cart_list">
                                     <li>
@@ -110,6 +113,7 @@
                                 </div>
                             </div>
                         </li>
+                        <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}" class="nav-link">로그아웃</a></li>
                     </ul>
                 </div>
             </div>
