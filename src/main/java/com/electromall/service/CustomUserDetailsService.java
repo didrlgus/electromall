@@ -2,6 +2,7 @@ package com.electromall.service;
 
 import com.electromall.domain.account.Account;
 import com.electromall.domain.account.AccountRepository;
+import com.electromall.domain.account.CustomUserDetails;
 import com.electromall.exception.ValidCustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,11 +29,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Account> accountOpt = accountRepository.findByEmail(username);
-        Account account = accountOpt.orElseThrow(() -> new ValidCustomException(AUTHENTICATION_EXCEPTION_MESSAGE, "email"));
+        Account account = accountOpt.orElseThrow(() -> new UsernameNotFoundException(AUTHENTICATION_EXCEPTION_MESSAGE));
 
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(account.getRoleKey()));
 
-        return new User(account.getEmail(), account.getPassword(), authorities);
+        return new CustomUserDetails(account.getId(), account.getEmail(), account.getName(), account.getPassword(), authorities);
     }
 }

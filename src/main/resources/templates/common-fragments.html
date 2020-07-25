@@ -43,33 +43,33 @@
 
 
         <!-- Latest jQuery -->
-        <script src="assets/js/jquery-1.12.4.min.js"></script>
+        <script th:src="@{assets/js/jquery-1.12.4.min.js}"></script>
         <!-- popper min js -->
-        <script src="assets/js/popper.min.js"></script>
+        <script th:src="@{assets/js/popper.min.js}"></script>
         <!-- Latest compiled and minified Bootstrap -->
-        <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+        <script th:src="@{assets/bootstrap/js/bootstrap.min.js}"></script>
         <!-- owl-carousel min js  -->
-        <script src="assets/owlcarousel/js/owl.carousel.min.js"></script>
+        <script th:src="@{assets/owlcarousel/js/owl.carousel.min.js}"></script>
         <!-- magnific-popup min js  -->
-        <script src="assets/js/magnific-popup.min.js"></script>
+        <script th:src="@{assets/js/magnific-popup.min.js}"></script>
         <!-- waypoints min js  -->
-        <script src="assets/js/waypoints.min.js"></script>
+        <script th:src="@{assets/js/waypoints.min.js}"></script>
         <!-- parallax js  -->
-        <script src="assets/js/parallax.js"></script>
+        <script th:src="@{assets/js/parallax.js}"></script>
         <!-- countdown js  -->
-        <script src="assets/js/jquery.countdown.min.js"></script>
+        <script th:src="@{assets/js/jquery.countdown.min.js}"></script>
         <!-- imagesloaded js -->
-        <script src="assets/js/imagesloaded.pkgd.min.js"></script>
+        <script th:src="@{assets/js/imagesloaded.pkgd.min.js}"></script>
         <!-- isotope min js -->
-        <script src="assets/js/isotope.min.js"></script>
+        <script th:src="@{assets/js/isotope.min.js}"></script>
         <!-- jquery.dd.min js -->
-        <script src="assets/js/jquery.dd.min.js"></script>
+        <script th:src="@{assets/js/jquery.dd.min.js}"></script>
         <!-- slick js -->
-        <script src="assets/js/slick.min.js"></script>
+        <script th:src="@{assets/js/slick.min.js}"></script>
         <!-- elevatezoom js -->
-        <script src="assets/js/jquery.elevatezoom.js"></script>
+        <script th:src="@{assets/js/jquery.elevatezoom.js}"></script>
         <!-- scripts js -->
-        <script src="assets/js/scripts.js"></script>
+        <script th:src="@{assets/js/scripts.js}"></script>
     </head>
 
     <div th:fragment="preloader">
@@ -277,9 +277,12 @@
                     <div class="col-md-6">
                         <div class="text-center text-md-right">
                             <ul class="header_list">
-                                <li><a href="compare.html"><i class="ti-control-shuffle"></i><span>Compare</span></a></li>
-                                <li><a href="wishlist.html"><i class="ti-heart"></i><span>Wishlist</span></a></li>
-                                <li><a href="/login"><i class="ti-user"></i><span>Login</span></a></li>
+                                <li sec:authorize="!isAuthenticated()"><a th:href="@{/login}">로그인</a></li>
+                                <li sec:authorize="!isAuthenticated()">|</li>
+                                <li sec:authorize="!isAuthenticated()"><a th:href="@{/signup}">회원가입</a></li>
+                                <li sec:authorize="isAuthenticated()"><a th:href="@{/profile}"><span th:text="${#authentication.principal.name} + '님'"></span></a></li>
+                                <li sec:authorize="isAuthenticated()"><a href="wishlist.html"><i class="ti-heart"></i><span>Wishlist</span></a></li>
+                                <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">로그아웃</a></li>
                             </ul>
                         </div>
                     </div>
