@@ -280,7 +280,7 @@
                                 <li sec:authorize="!isAuthenticated()"><a th:href="@{/login}">로그인</a></li>
                                 <li sec:authorize="!isAuthenticated()">|</li>
                                 <li sec:authorize="!isAuthenticated()"><a th:href="@{/signup}">회원가입</a></li>
-                                <li sec:authorize="isAuthenticated()"><a href="compare.html"><i class="ti-control-shuffle"></i><span>Compare</span></a></li>
+                                <li sec:authorize="isAuthenticated()"><a th:href="@{/profile}"><span th:text="${#authentication.principal.name} + '님'"></span></a></li>
                                 <li sec:authorize="isAuthenticated()"><a href="wishlist.html"><i class="ti-heart"></i><span>Wishlist</span></a></li>
                                 <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">로그아웃</a></li>
                             </ul>

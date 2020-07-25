@@ -91,7 +91,7 @@
                         <li sec:authorize="!isAuthenticated()"><a th:href="@{/login}" class="nav-link">로그인</a></li>
                         <li sec:authorize="!isAuthenticated()">|</li>
                         <li sec:authorize="!isAuthenticated()"><a th:href="@{/signup}" class="nav-link">회원가입</a></li>
-                        <li sec:authorize="isAuthenticated()"><a href="#" class="nav-link"><i class="linearicons-user"></i></a></li>
+                        <li sec:authorize="isAuthenticated()"><a th:href="@{/profile}"><span th:text="${#authentication.principal.name} + '님'"></span></a></li>
                         <li sec:authorize="isAuthenticated()"><a href="#" class="nav-link"><i class="linearicons-heart"></i><span class="wishlist_count">0</span></a></li>
                         <li sec:authorize="isAuthenticated()" class="dropdown cart_dropdown"><a class="nav-link cart_trigger" href="#" data-toggle="dropdown"><i class="linearicons-bag2"></i><span class="cart_count">2</span><span class="amount"><span class="currency_symbol">$</span>159.00</span></a>
                             <div class="cart_box cart_right dropdown-menu dropdown-menu-right">
@@ -302,13 +302,13 @@
                                     </li>
                                     <li><a class="dropdown-item nav-link nav_item" href="coming-soon.html"><i class="flaticon-headphones"></i> <span>Headphones</span></a></li>
                                     <li><a class="dropdown-item nav-link nav_item" href="404.html"><i class="flaticon-console"></i> <span>Gaming</span></a></li>
-                                    <li><a class="dropdown-item nav-link nav_item" href="account/login.html"><i class="flaticon-watch"></i> <span>Watches</span></a></li>
+                                    <li><a class="dropdown-item nav-link nav_item" href="login.html"><i class="flaticon-watch"></i> <span>Watches</span></a></li>
                                     <li><a class="dropdown-item nav-link nav_item" href="register.html"><i class="flaticon-music-system"></i> <span>Home Audio & Theater</span></a></li>
                                     <li><a class="dropdown-item nav-link nav_item" href="coming-soon.html"><i class="flaticon-monitor"></i> <span>TV & Smart Box</span></a></li>
                                     <li><a class="dropdown-item nav-link nav_item" href="404.html"><i class="flaticon-printer"></i> <span>Printer</span></a></li>
                                     <li>
                                         <ul class="more_slide_open">
-                                            <li><a class="dropdown-item nav-link nav_item" href="account/login.html"><i class="flaticon-fax"></i> <span>Fax Machine</span></a></li>
+                                            <li><a class="dropdown-item nav-link nav_item" href="login.html"><i class="flaticon-fax"></i> <span>Fax Machine</span></a></li>
                                             <li><a class="dropdown-item nav-link nav_item" href="register.html"><i class="flaticon-mouse"></i> <span>Mouse</span></a></li>
                                         </ul>
                                     </li>
@@ -348,7 +348,7 @@
                                                 <li><a class="dropdown-item nav-link nav_item" href="contact.html">Contact Us</a></li>
                                                 <li><a class="dropdown-item nav-link nav_item" href="faq.html">Faq</a></li>
                                                 <li><a class="dropdown-item nav-link nav_item" href="404.html">404 Error Page</a></li>
-                                                <li><a class="dropdown-item nav-link nav_item" href="account/login.html">Login</a></li>
+                                                <li><a class="dropdown-item nav-link nav_item" href="login.html">Login</a></li>
                                                 <li><a class="dropdown-item nav-link nav_item" href="account/signup.html">Register</a></li>
                                                 <li><a class="dropdown-item nav-link nav_item" href="term-condition.html">Terms and Conditions</a></li>
                                             </ul>

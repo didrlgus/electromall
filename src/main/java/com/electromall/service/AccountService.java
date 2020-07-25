@@ -4,9 +4,13 @@ import com.electromall.domain.account.Account;
 import com.electromall.domain.account.AccountRepository;
 import com.electromall.domain.account.Role;
 import com.electromall.domain.account.form.SignUpForm;
+import com.electromall.utils.ExceptionUtils;
+import com.electromall.web.dto.AccountResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Service
@@ -31,5 +35,12 @@ public class AccountService {
                 .password(passwordEncoder.encode(signUpForm.getPassword()))
                 .role(Role.USER)
                 .build());
+    }
+
+    public AccountResponseDto.Profile getProfile(Long id) {
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException(ExceptionUtils.NO_EXIST_USER_MESSAGE));
+
+        return account.toProfileResponseDto(account);
     }
 }

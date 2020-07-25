@@ -20,7 +20,7 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    @GetMapping("/account")
+    @GetMapping("/profile")
     public String getAccountView() {
 
         return "account/my-account";
@@ -28,7 +28,7 @@ public class AccountController {
 
     @GetMapping("/login")
     public String getLoginView() {
-        return "account/login";
+        return "login";
     }
 
     @GetMapping("/signup")
