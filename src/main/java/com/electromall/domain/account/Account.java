@@ -1,6 +1,7 @@
 package com.electromall.domain.account;
 
 import com.electromall.domain.BaseTimeEntity;
+import com.electromall.web.dto.AccountRequestDto;
 import com.electromall.web.dto.AccountResponseDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -73,5 +74,15 @@ public class Account extends BaseTimeEntity {
                 .buildingName(account.getBuildingName())
                 .detailAddr(account.getDetailAddr())
                 .build();
+    }
+
+    public Account update(AccountRequestDto.Update requestDto) {
+        this.name = requestDto.getName();
+        this.agreeMessageByEmail = requestDto.isAgreeMessageByEmail();
+        this.roadAddr = requestDto.getRoadAddr();
+        this.buildingName = requestDto.getBuildingName();
+        this.detailAddr = requestDto.getDetailAddr();
+
+        return this;
     }
 }

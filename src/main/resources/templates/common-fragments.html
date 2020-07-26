@@ -70,6 +70,8 @@
         <script th:src="@{assets/js/jquery.elevatezoom.js}"></script>
         <!-- scripts js -->
         <script th:src="@{assets/js/scripts.js}"></script>
+        <!-- Daum 우편번호 API -->
+        <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js?autoload=false"></script>
     </head>
 
     <div th:fragment="preloader">
@@ -82,8 +84,7 @@
         </div>
     </div>
 
-    <div th:fragment="onload-popup">
-        <div class="modal fade subscribe_popup" id="onload-popup" tabindex="-1" role="dialog" aria-hidden="true">
+    <div th:fragment="onload-popup" class="modal fade subscribe_popup" id="onload-popup" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -123,7 +124,6 @@
                 </div>
             </div>
         </div>
-    </div>
 
     <footer class="bg_gray" th:fragment="footer">
         <div class="footer_top small_pt pb_20">
@@ -292,7 +292,7 @@
         <div class="bottom_header dark_skin main_menu_uppercase">
             <div class="container">
                 <nav class="navbar navbar-expand-lg">
-                    <a class="navbar-brand" href="../index.html">
+                    <a class="navbar-brand" th:href="@{/}">
                         <img class="logo_light" src="assets/images/logo_light.png" alt="logo" />
                         <img class="logo_dark" src="assets/images/logo_dark.png" alt="logo" />
                     </a>
