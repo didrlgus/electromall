@@ -23,6 +23,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static com.electromall.utils.ApiUtils.API_VERSION;
 import static com.electromall.utils.ExceptionUtils.NO_EXIST_USER_MESSAGE;
+import static com.electromall.utils.RequestSuccessUtils.UPDATE_PASSWORD_SUCCESS_MESSAGE;
 import static com.electromall.utils.RequestSuccessUtils.UPDATE_PROFILE_SUCCESS_MESSAGE;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -122,6 +123,21 @@ public class AccountApiControllerTest {
         callUpdateProfileAPI(accountId, requestDto, status().is4xxClientError());
     }
 
+    // 회원 비밀번호 수정 테스트
+    @WithAccount("test@naver.com")
+    @Test
+    public void updatePasswordValidTest() throws Exception {
+        Long accountId = authUtils.getAuthId();
+
+        AccountRequestDto.Password requestDto = AccountRequestDto.Password.builder()
+                .password("test-password")
+                .build();
+
+        MvcResult result = callUpdatePasswordAPI(accountId, requestDto, status().isOk());
+
+        assertEquals(result.getResponse().getContentAsString(), UPDATE_PASSWORD_SUCCESS_MESSAGE);
+    }
+
     public MvcResult callGetProfileAPI(Long accountId, ResultMatcher status) throws Exception {
 
         return mockMvc.perform(get(API_VERSION + "/account/" + accountId)
@@ -134,6 +150,16 @@ public class AccountApiControllerTest {
                                           ResultMatcher status) throws Exception {
 
         return mockMvc.perform(put(API_VERSION + "/account/" + accountId)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(new ObjectMapper().writeValueAsString(requestDto)))
+                .andExpect(status)
+                .andReturn();
+    }
+
+    public MvcResult callUpdatePasswordAPI(Long accountId, AccountRequestDto.Password requestDto,
+                                           ResultMatcher status) throws Exception {
+
+        return mockMvc.perform(put(API_VERSION + "/account/" + accountId + "/password")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(new ObjectMapper().writeValueAsString(requestDto)))
                 .andExpect(status)

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 import static com.electromall.utils.ApiUtils.API_VERSION;
+import static com.electromall.utils.RequestSuccessUtils.UPDATE_PASSWORD_SUCCESS_MESSAGE;
 import static com.electromall.utils.RequestSuccessUtils.UPDATE_PROFILE_SUCCESS_MESSAGE;
 
 @RequiredArgsConstructor
@@ -32,6 +33,15 @@ public class AccountApiController {
         accountService.updateProfile(id, requestDto);
 
         return ResponseEntity.ok(UPDATE_PROFILE_SUCCESS_MESSAGE);
+    }
+
+    @PutMapping("/account/{id}/password")
+    public ResponseEntity<?> updatePassword(@PathVariable("id") Long id,
+                                            @Valid @RequestBody AccountRequestDto.Password requestDto) {
+
+        accountService.updatePassword(id, requestDto);
+
+        return ResponseEntity.ok(UPDATE_PASSWORD_SUCCESS_MESSAGE);
     }
 
 }

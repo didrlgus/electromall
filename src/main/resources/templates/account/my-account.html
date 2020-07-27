@@ -40,6 +40,10 @@
     <!-- START MAIN CONTENT -->
     <div class="main_content">
         <script th:inline="javascript">
+            var commObj = {
+                userId : [[${session.user.id}]],
+                API_VERSION : "/api/v1"
+            }
             var addrObj = {
                 // 도로명주소
                 searchAddrFn   : function() {
@@ -55,15 +59,42 @@
                 }
             }
             var profileSettingsObj = {
-                passwordClick : function () {
-                    console.log("password-tab")
+                passwordModifyClick : function () {
+                    var npassword = $("input[name='npassword']").val()
+                    var cpassword = $("input[name='cpassword']").val()
+
+                    if(npassword !== cpassword) {
+                        $("input[name='cpassword']").focus()
+                        alert("두 비밀번호가 일치하지 않습니다.")
+                        return
+                    }
+
+                    var passwordObj = {
+                        "password" : npassword
+                    }
+
+                    $.ajax({
+                        type: "PUT",
+                        url: commObj.API_VERSION + "/account/" + commObj.userId + "/password",
+                        contentType: "application/json",
+                        data: JSON.stringify(passwordObj),
+                        success: function (data) {
+                            $("#warn-password").hide()
+                            alert(data)
+                            $("input[name='npassword']").val("")
+                            $("input[name='cpassword']").val("")
+                        },
+                        error: function (e) {
+                            $("#warn-password").show()
+                        }
+                    })
                 },
                 orderClick : function () {
                     console.log('order-tab')
                 },
                 modifyProfile : function () {
-                    const userId = [[${session.user.id}]]
-                    const API_VERSION = "/api/v1"
+                    var API_VERSION = commObj.API_VERSION
+                    var userId = commObj.userId
 
                     var profileObj = {
                         "name" : $("input[name='name']").val(),
@@ -127,7 +158,7 @@
                                     <a class="nav-link active" id="account-detail-tab" data-toggle="tab" href="#account-detail" role="tab" aria-controls="account-detail" aria-selected="true"><i class="ti-id-badge"></i>프로필</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" onclick="profileSettingsObj.passwordClick()" id="password-tab" data-toggle="tab" href="#password" role="tab" aria-controls="orders" aria-selected="false"><i class="ti-lock"></i>비밀번호</a>
+                                    <a class="nav-link" id="password-tab" data-toggle="tab" href="#password" role="tab" aria-controls="orders" aria-selected="false"><i class="ti-lock"></i>비밀번호</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" onclick="profileSettingsObj.orderClick()" id="orders-tab" data-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="ti-shopping-cart-full"></i>주문내역</a>
@@ -224,18 +255,22 @@
                                     </div>
                                     <div class="card-body">
                                         <p>비밀번호를 수정하려면 빈칸을 채우고 버튼을 누르세요.</p>
-                                        <form method="post" name="enq">
+                                        <form>
                                             <div class="row">
                                                 <div class="form-group col-md-12">
                                                     <label>새 비밀번호 <span class="required">*</span></label>
-                                                    <input class="form-control" name="npassword" type="password" required>
+                                                    <input class="form-control" name="npassword" type="password" aria-describedby="passwordHelp" required>
+                                                    <small id="passwordHelp" class="form-text text-muted">
+                                                        8자 이상 50자 이내로 입력하세요. 영문자, 숫자, 특수기호를 사용할 수 있으며 공백은 사용할 수 없습니다.
+                                                    </small>
+                                                    <small class="form-text text-danger" id="warn-password">유효하지 않은 패스워드 입니다.</small>
                                                 </div>
                                                 <div class="form-group col-md-12">
                                                     <label>비밀번호 확인 <span class="required">*</span></label>
                                                     <input class="form-control" name="cpassword" type="password" required>
                                                 </div>
                                                 <div class="col-md-12">
-                                                    <button type="submit" class="btn btn-fill-out" name="submit" value="Submit">비밀번호 변경</button>
+                                                    <button type="button" class="btn btn-fill-out" name="submit" onclick="profileSettingsObj.passwordModifyClick()">비밀번호 변경</button>
                                                 </div>
                                             </div>
                                         </form>

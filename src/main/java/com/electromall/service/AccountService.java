@@ -53,4 +53,11 @@ public class AccountService {
 
         accountRepository.save(account.update(requestDto));
     }
+
+    public void updatePassword(Long id, AccountRequestDto.Password requestDto) {
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> new ValidCustomException(ExceptionUtils.NO_EXIST_USER_MESSAGE));
+
+        accountRepository.save(account.updatePassword(requestDto));
+    }
 }

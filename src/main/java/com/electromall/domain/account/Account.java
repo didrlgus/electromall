@@ -85,4 +85,10 @@ public class Account extends BaseTimeEntity {
 
         return this;
     }
+
+    public Account updatePassword(AccountRequestDto.Password requestDto) {
+        this.password = requestDto.getPassword();
+
+        return this;
+    }
 }
