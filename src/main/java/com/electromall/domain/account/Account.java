@@ -6,6 +6,8 @@ import com.electromall.web.dto.AccountResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -87,7 +89,8 @@ public class Account extends BaseTimeEntity {
     }
 
     public Account updatePassword(AccountRequestDto.Password requestDto) {
-        this.password = requestDto.getPassword();
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        this.password = passwordEncoder.encode(requestDto.getPassword());
 
         return this;
     }
