@@ -16,6 +16,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+
+import static com.electromall.utils.ApiUtils.API_VERSION;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -31,10 +34,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/", "/products", "/productDetail",
-                        "/login", "/signup", "/account", "/cart", "/checkout",
-                        "/orderComplete", "/wishlist").permitAll()
+                        "/login", "/signup", "/cart", "/checkout", "/orderComplete", "/wishlist").permitAll()
                 .antMatchers(HttpMethod.POST, "/signup", "/login").permitAll()
-                .antMatchers(HttpMethod.GET, "/account/**").hasAnyRole(Role.ADMIN.name(), Role.USER.name())
+                .antMatchers(HttpMethod.GET, "/profile", API_VERSION + "/account/**").hasAnyRole(Role.ADMIN.name(), Role.USER.name())
+                .antMatchers(HttpMethod.PUT, API_VERSION + "/account/**").hasAnyRole(Role.ADMIN.name(), Role.USER.name())
                 .anyRequest().authenticated();
 
         http.formLogin()

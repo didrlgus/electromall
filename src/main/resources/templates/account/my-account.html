@@ -40,21 +40,98 @@
     <!-- START MAIN CONTENT -->
     <div class="main_content">
         <script th:inline="javascript">
+            var commObj = {
+                userId : [[${session.user.id}]],
+                API_VERSION : "/api/v1"
+            }
+            var addrObj = {
+                // 도로명주소
+                searchAddrFn   : function() {
+                    var roadAddress = "";
+                    daum.postcode.load(function(){
+                        new daum.Postcode({
+                            oncomplete: function(data) {
+                                $("input[name='roadAddr']").val(data.roadAddress)
+                                $("input[name='buildingName']").val(data.buildingName)
+                            }
+                        }).open()
+                    })
+                }
+            }
             var profileSettingsObj = {
-                passwordClick : function () {
-                    console.log("password-tab")
+                passwordModifyClick : function () {
+                    var npassword = $("input[name='npassword']").val()
+                    var cpassword = $("input[name='cpassword']").val()
+
+                    if(npassword !== cpassword) {
+                        $("input[name='cpassword']").focus()
+                        alert("두 비밀번호가 일치하지 않습니다.")
+                        return
+                    }
+
+                    var passwordObj = {
+                        "password" : npassword
+                    }
+
+                    $.ajax({
+                        type: "PUT",
+                        url: commObj.API_VERSION + "/account/" + commObj.userId + "/password",
+                        contentType: "application/json",
+                        data: JSON.stringify(passwordObj),
+                        success: function (data) {
+                            $("#warn-password").hide()
+                            alert(data)
+                            $("input[name='npassword']").val("")
+                            $("input[name='cpassword']").val("")
+                        },
+                        error: function (e) {
+                            $("#warn-password").show()
+                        }
+                    })
                 },
                 orderClick : function () {
                     console.log('order-tab')
+                },
+                modifyProfile : function () {
+                    var API_VERSION = commObj.API_VERSION
+                    var userId = commObj.userId
+
+                    var profileObj = {
+                        "name" : $("input[name='name']").val(),
+                        "agreeMessageByEmail" : $("input[name='rdo_email_chk']").val(),
+                        "roadAddr" : $("input[name='roadAddr']").val(),
+                        "buildingName" : $("input[name='buildingName']").val(),
+                        "detailAddr" : $("input[name='detailAddr']").val()
+                    }
+
+                    $.ajax({
+                        type : "PUT",
+                        url  : API_VERSION + "/account/" + userId,
+                        contentType: "application/json",
+                        data : JSON.stringify(profileObj),
+                        success: function (data) {
+                            $(".text-danger").hide()
+                            alert(data);
+                        },
+                        error : function (e) {
+                            $(".text-danger").hide()
+                            var errors = e.responseJSON.errors
+                            errors.forEach(el => {
+                                $("#warn-" + el.field).show()
+                            })
+                            //alert(e.responseText);
+                        }
+                    })
                 }
             }
             $(function() {
-                let userId = [[${session.user.id}]]
-                let api_version = "/api/v1"
+                const userId = [[${session.user.id}]]
+                const API_VERSION = "/api/v1"
+                $(".text-danger").hide()
 
                 $.ajax({
                     type : "GET",
-                    url  : api_version + "/account/" + userId,
+                    url  : API_VERSION + "/account/" + userId,
                     contentType: "application/json",
                     success: function (data) {
                         console.log(data)
@@ -81,13 +158,10 @@
                                     <a class="nav-link active" id="account-detail-tab" data-toggle="tab" href="#account-detail" role="tab" aria-controls="account-detail" aria-selected="true"><i class="ti-id-badge"></i>프로필</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" onclick="profileSettingsObj.passwordClick()" id="password-tab" data-toggle="tab" href="#password" role="tab" aria-controls="orders" aria-selected="false"><i class="ti-lock"></i>비밀번호</a>
+                                    <a class="nav-link" id="password-tab" data-toggle="tab" href="#password" role="tab" aria-controls="orders" aria-selected="false"><i class="ti-lock"></i>비밀번호</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" onclick="profileSettingsObj.orderClick()" id="orders-tab" data-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="ti-shopping-cart-full"></i>주문내역</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="address-tab" data-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true"><i class="ti-location-pin"></i>주소</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" th:href="@{/logout}"><i class="ti-lock"></i>로그아웃</a>
@@ -126,35 +200,48 @@
                                                     <small id="nameHelp" class="form-text text-muted">
                                                         공백없이 20자(숫자/문자) 이내로 입력가능 합니다.
                                                     </small>
+                                                    <small class="form-text text-danger" id="warn-name">이름 값이 유효하지 않습니다.</small>
                                                 </div>
                                                 <div class="form-group col-md-12">
                                                     <label>메일 수신동의 여부<span class="required">*</span></label>
                                                     <div class="radio">
                                                         <label>
-                                                            <input type="radio" name="rdo_email_chk" id="email_yes" value="1"> Yes
+                                                            <input type="radio" name="rdo_email_chk" id="email_yes" value="true"> Yes
                                                         </label>
                                                         <label>
-                                                            <input type="radio" name="rdo_email_chk" id="email_no" value="0"> No
+                                                            <input type="radio" name="rdo_email_chk" id="email_no" value="false"> No
                                                         </label>
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label>도로명 주소</label>
                                                     <input name="roadAddr" class="form-control changeable-input" type="text" placeholder="도로명 주소를 입력하세요.">
+                                                    <small id="roadAddrHelp" class="form-text text-muted">
+                                                        50자(숫자/문자) 이내로 입력가능 합니다.
+                                                    </small>
+                                                    <small class="form-text text-danger" id="warn-roadAddr">도로명 주소 값이 유효하지 않습니다.</small>
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label>건물 이름</label>
                                                     <input name="buildingName" class="form-control changeable-input" type="text" placeholder="건물 이름을 입력하세요.">
+                                                    <small id="buildingNameHelp" class="form-text text-muted">
+                                                        50자(숫자/문자) 이내로 입력가능 합니다.
+                                                    </small>
+                                                    <small class="form-text text-danger" id="warn-buildingName">건물 이름 값이 유효하지 않습니다.</small>
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label>상세 주소</label>
                                                     <input name="detailAddr" class="form-control changeable-input" type="text" placeholder="상세 주소를 입력하세요.">
+                                                    <small id="detailAddrHelp" class="form-text text-muted">
+                                                        50자(숫자/문자) 이내로 입력가능 합니다.
+                                                    </small>
+                                                    <small class="form-text text-danger" id="warn-detailAddr">상세 주소 값이 유효하지 않습니다.</small>
                                                 </div>
                                                 <div class="form-group col-md-6">
-                                                    <button th:type="button" class="btn btn-fill-out" th:onclick="addrObj.searchAddrFn()">우편번호 검색</button>
+                                                    <button th:type="button" class="btn btn-fill-out" onclick="addrObj.searchAddrFn()">우편번호 검색</button>
                                                 </div>
                                                 <div class="col-md-12">
-                                                    <button type="submit" class="btn btn-fill-out" name="submit" value="Submit">수정</button>
+                                                    <button type="button" class="btn btn-fill-out" name="submit" onclick="profileSettingsObj.modifyProfile()">수정</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -168,18 +255,22 @@
                                     </div>
                                     <div class="card-body">
                                         <p>비밀번호를 수정하려면 빈칸을 채우고 버튼을 누르세요.</p>
-                                        <form method="post" name="enq">
+                                        <form>
                                             <div class="row">
                                                 <div class="form-group col-md-12">
                                                     <label>새 비밀번호 <span class="required">*</span></label>
-                                                    <input class="form-control" name="npassword" type="password" required>
+                                                    <input class="form-control" name="npassword" type="password" aria-describedby="passwordHelp" required>
+                                                    <small id="passwordHelp" class="form-text text-muted">
+                                                        8자 이상 50자 이내로 입력하세요. 영문자, 숫자, 특수기호를 사용할 수 있으며 공백은 사용할 수 없습니다.
+                                                    </small>
+                                                    <small class="form-text text-danger" id="warn-password">유효하지 않은 패스워드 입니다.</small>
                                                 </div>
                                                 <div class="form-group col-md-12">
                                                     <label>비밀번호 확인 <span class="required">*</span></label>
                                                     <input class="form-control" name="cpassword" type="password" required>
                                                 </div>
                                                 <div class="col-md-12">
-                                                    <button type="submit" class="btn btn-fill-out" name="submit" value="Submit">비밀번호 변경</button>
+                                                    <button type="button" class="btn btn-fill-out" name="submit" onclick="profileSettingsObj.passwordModifyClick()">비밀번호 변경</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -221,34 +312,6 @@
                                             </tr>
                                             </tbody>
                                         </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="card mb-3 mb-lg-0">
-                                            <div class="card-header">
-                                                <h3>Billing Address</h3>
-                                            </div>
-                                            <div class="card-body">
-                                                <address>House #15<br>Road #1<br>Block #C <br>Angali <br> Vedora <br>1212</address>
-                                                <p>New York</p>
-                                                <a href="#" class="btn btn-fill-out">Edit</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h3>Shipping Address</h3>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <address>House #15<br>Road #1<br>Block #C <br>Angali <br> Vedora <br>1212</address>
-                                        <p>New York</p>
-                                        <a href="#" class="btn btn-fill-out">Edit</a>
                                     </div>
                                 </div>
                             </div>
